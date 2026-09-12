@@ -1,0 +1,31 @@
+# Training artefacts
+runs/
+*.zip
+*.pt
+*.pth
+*.mp4
+*.gif
+events.out.tfevents.*
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Environments
+.venv/
+venv/
+env/
+.conda/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

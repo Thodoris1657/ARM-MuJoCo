@@ -1,0 +1,18 @@
+# Core: physics + environment API
+mujoco>=3.1
+gymnasium>=0.29
+numpy>=1.24
+pyyaml>=6.0
+
+# Trainer A -- Stable-Baselines3
+stable-baselines3>=2.3
+torch>=2.2
+
+# Trainer B -- TorchRL
+torchrl>=0.4
+tensordict>=0.4
+
+# Rendering / logging / tests
+imageio[ffmpeg]>=2.31
+tensorboard>=2.14
+pytest>=7.4

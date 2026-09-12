@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mujoco-arm-rl"
+version = "0.1.0"
+description = "Reinforcement learning on a 3-joint MuJoCo manipulator, with Stable-Baselines3 and TorchRL trainers"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = [
+    "mujoco>=3.1",
+    "gymnasium>=0.29",
+    "numpy>=1.24",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+sb3 = ["stable-baselines3>=2.3", "torch>=2.2", "tensorboard>=2.14"]
+torchrl = ["torchrl>=0.4", "tensordict>=0.4", "torch>=2.2"]
+render = ["imageio[ffmpeg]>=2.31"]
+dev = ["pytest>=7.4", "ruff>=0.4"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]

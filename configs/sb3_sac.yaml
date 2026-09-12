@@ -1,0 +1,24 @@
+# Defaults for scripts/train_sb3.py -- every key can be overridden on the CLI.
+algo: sac                 # sac | ppo | td3
+total_timesteps: 200000
+n_envs: 1                 # SAC is off-policy; 1 env is usually fastest on CPU
+seed: 0
+device: auto
+
+learning_rate: 0.0003
+batch_size: 256
+buffer_size: 300000
+learning_starts: 2000
+train_freq: 1
+gradient_steps: 1
+gamma: 0.98               # ~2 s episodes at dt=0.01 -> short effective horizon
+tau: 0.02
+net_arch: [256, 256]
+
+# PPO-only knobs (ignored by SAC/TD3)
+n_steps: 1024
+gae_lambda: 0.95
+ent_coef: 0.0
+
+eval_freq: 10000
+eval_episodes: 10
