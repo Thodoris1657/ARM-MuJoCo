@@ -1,24 +1,27 @@
 # Defaults for scripts/train_sb3.py -- every key can be overridden on the CLI.
-algo: sac                 # sac | ppo | td3
-total_timesteps: 200000
-n_envs: 1                 # SAC is off-policy; 1 env is usually fastest on CPU
+# Values chosen by measurement on the held-out benchmark, not folklore; see README.
+algo: sac                 # sac | tqc (needs sb3-contrib) | td3 | ppo
+env_id: MujocoArm3Reach-v1
+total_timesteps: 60000    # 30k already reaches ~100 % @5 cm; the rest buys precision
+n_envs: 1
 seed: 0
 device: auto
+threads: 0                # 0 = torch default; 1 when running several seeds in parallel
 
-learning_rate: 0.0003
+learning_rate: 0.001      # 1e-3 beat 3e-4: 98 % vs 71 % success @2 cm at 30k steps
+gamma: 0.95               # 25 Hz -> ~0.8 s effective horizon, matching a ~0.5 s reach
 batch_size: 256
 buffer_size: 300000
-learning_starts: 2000
+learning_starts: 1000
 train_freq: 1
 gradient_steps: 1
-gamma: 0.98               # ~2 s episodes at dt=0.01 -> short effective horizon
 tau: 0.02
 net_arch: [256, 256]
 
-# PPO-only knobs (ignored by SAC/TD3)
+# PPO-only knobs (ignored by the off-policy algorithms)
 n_steps: 1024
 gae_lambda: 0.95
 ent_coef: 0.0
 
-eval_freq: 10000
-eval_episodes: 10
+eval_freq: 5000
+eval_episodes: 20

@@ -63,6 +63,14 @@
     </body>
   </worldbody>
 
+  <!-- The base is welded to the world, so MuJoCo's automatic parent/child filter
+       does not cover it: without this exclude, link1's capsule sits 4.5 cm inside
+       the base cylinder and generates a permanent contact (and friction) on the
+       pan joint. -->
+  <contact>
+    <exclude body1="base" body2="link1"/>
+  </contact>
+
   <actuator>
     <motor name="m1" joint="joint1" gear="20"/>
     <motor name="m2" joint="joint2" gear="25"/>

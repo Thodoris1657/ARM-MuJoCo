@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Open the MuJoCo viewer and drive the arm with random torques.
+"""Open the MuJoCo viewer and drive the arm with random actions.
 
 Use this first: it proves MuJoCo, the MJCF model and the environment all work
 on your machine before any RL is involved.
@@ -35,18 +35,21 @@ def main() -> None:
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--target", type=float, nargs=3, default=None,
                    metavar=("X", "Y", "Z"),
-                   help="train/evaluate on ONE fixed target instead of random ones, e.g. --target 0.3 0.0 0.35")
+                   help="pin the target, e.g. --target 0.3 0.0 0.35 (handy for checking reachability)")
+    p.add_argument("--torque", action="store_true",
+                   help="use the legacy torque-control interface instead of the position servo")
     args = p.parse_args()
 
     if args.headless and args.episodes == 0:
         args.episodes = 3  # never loop forever without a window to close
 
     env = Reach3Env(render_mode=None if args.headless else "human",
+                    control_mode="torque" if args.torque else "position",
                     fixed_target=None if args.target is None else tuple(args.target))
     realtime = not args.fast and not args.headless
 
-    print(f"observation space {env.observation_space.shape}  "
-          f"action space {env.action_space.shape}  dt {env.dt:.3f}s")
+    print(f"{env.control_mode} control at {1 / env.dt:.0f} Hz | obs {env.observation_space.shape} "
+          f"| action {env.action_space.shape}")
     if args.episodes == 0:
         print("Looping episodes -- close the viewer window to stop.")
 
@@ -63,11 +66,11 @@ def main() -> None:
             if not args.headless and not env.viewer_is_running:
                 done = True  # the user closed the window mid-episode
         ep += 1
-        print(f"episode {ep}: return {total:8.2f}  final distance {info['distance']:.3f} m")
+        print(f"episode {ep}: return {total:7.2f}  final distance {1000 * info['distance']:.0f} mm")
         if not args.headless and not env.viewer_is_running:
             break
 
-    print("\nRandom torques give roughly this return; a trained policy should be far higher.")
+    print("\nRandom actions give roughly this; compare: python scripts/evaluate.py --ckpt oracle --render human")
     env.wait_for_viewer()
     env.close()
 
